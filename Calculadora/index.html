@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Web</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="calculator">
+        <h1>Calculadora</h1>
+        <form action="/calculate" method="POST">
+            <label for="num1">Número 1:</label>
+            <input type="number" name="num1" id="num1" required>
+
+            <label for="operacao">Operação:</label>
+            <select name="operacao" id="operacao" required>
+                <option value="+">Adição (+)</option>
+                <option value="-">Subtração (-)</option>
+                <option value="*">Multiplicação (*)</option>
+                <option value="/">Divisão (/)</option>
+            </select>
+
+            <label for="num2">Número 2:</label>
+            <input type="number" name="num2" id="num2" required>
+
+            <button type="submit">Calcular</button>
+        </form>
+        <div class="result">
+            <h2>Resultado:</h2>
+            <p id="result">{{ result }}</p>
+        </div>
+    </div>
+</body>
+</html>
