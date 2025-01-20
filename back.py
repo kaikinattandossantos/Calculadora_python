@@ -1,44 +1,37 @@
-def calculadora():
-    print("Bem-vindo à calculadora!")
-    print("Escolha uma das operações abaixo:")
-    print("1. Adição (+)")
-    print("2. Subtração (-)")
-    print("3. Multiplicação (*)")
-    print("4. Divisão (/)")
+from flask import Flask, request, render_template #baixar os pacotes
+#render template faz a conexão com outros documentos
+app = Flask(__name__)
 
-    while True:
-        try:
-            opcao = int(input("Digite o número da operação desejada (1-4): "))
-            if opcao not in [1, 2, 3, 4]:
-                print("Por favor, escolha uma opção válida!")
-                continue
+# Função para realizar operações matemáticas
+def calcular_operacao(num1, num2, operacao):
+    try:
+        if operacao == "+":
+            return num1 + num2
+        elif operacao == "-":
+            return num1 - num2
+        elif operacao == "*":
+            return num1 * num2
+        elif operacao == "/":
+            return "Erro: divisão por zero" if num2 == 0 else num1 / num2
+        else:
+            return "Operação inválida"
+    except Exception:
+        return "Erro: Entrada inválida"
 
-            num1 = float(input("Digite o primeiro número: "))
-            num2 = float(input("Digite o segundo número: "))
+@app.route('/') #página inicial
+def index(): #função atribuida ao caminho
+    return render_template('index.html', result="---")
 
-            if opcao == 1:
-                resultado = num1 + num2
-                print(f"Resultado: {num1} + {num2} = {resultado}")
-            elif opcao == 2:
-                resultado = num1 - num2
-                print(f"Resultado: {num1} - {num2} = {resultado}")
-            elif opcao == 3:
-                resultado = num1 * num2
-                print(f"Resultado: {num1} * {num2} = {resultado}")
-            elif opcao == 4:
-                if num2 == 0:
-                    print("Erro: divisão por zero não é permitida.")
-                else:
-                    resultado = num1 / num2
-                    print(f"Resultado: {num1} / {num2} = {resultado}")
+@app.route('/calculate', methods=['POST'])
+def calculate():
+    try:
+        num1 = float(request.form['num1'])
+        num2 = float(request.form['num2'])
+        operacao = request.form['operacao']
+        result = calcular_operacao(num1, num2, operacao)
+    except Exception:
+        result = "Erro: Entrada inválida"
+    return render_template('index.html', result=result)
 
-            continuar = input("Deseja realizar outra operação? (s/n): ").lower()
-            if continuar != 's':
-                print("Encerrando a calculadora. Até mais!")
-                break
-
-        except ValueError:
-            print("Entrada inválida. Por favor, tente novamente!")
-
-if __name__ == "__main__":
-    calculadora()
+if __name__ == "__main__": #Executa o código abaixo quando rodar o arquivo, a menos que seja importado para outro arquivo (deploy)
+    app.run(debug=True) #para atualizar o código em tempo real
